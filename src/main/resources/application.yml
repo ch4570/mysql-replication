@@ -1,26 +1,26 @@
 spring:
   datasource:
-    username: root
-    password: root
+    username: user
+    password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
     jdbc-url: jdbc:mysql://localhost:3306/db?serverTimezone=Asia/Seoul
 
     replication-sources:
       replication-source1:
         name: slave-1
-        username: root
-        password: root
+        username: user
+        password: 1234
         driver-class-name: com.mysql.cj.jdbc.Driver
         jdbc-url: jdbc:mysql://localhost:3307/db?serverTimezone=Asia/Seoul
       replication-source2:
         name: slave-2
-        username: root
-        password: root
+        username: user
+        password: 1234
         driver-class-name: com.mysql.cj.jdbc.Driver
         jdbc-url: jdbc:mysql://localhost:3308/db?serverTimezone=Asia/Seoul
       replication-source3:
         name: slave-3
-        username: root
-        password: root
+        username: user
+        password: 1234
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://localhost:3308/db?serverTimezone=Asia/Seoul
+        jdbc-url: jdbc:mysql://localhost:3309/db?serverTimezone=Asia/Seoul
