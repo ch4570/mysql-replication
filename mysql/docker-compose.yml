@@ -1,0 +1,125 @@
+version: "3"
+services:
+  # 서비스의 이름
+  db-master:
+    # 도커 이미지를 빌드하는 방법을 지정
+    build: 
+      # 현재 디렉토리를 빌드 컨텍스트로 사용
+      context: ./
+      # master 디렉토리에 위치한 Dockerfile을 사용하여 도커 이미지를 빌드
+      dockerfile: master/Dockerfile
+    # 컨테이너가 비정상적으로 종료되었을 때 자동으로 재시작
+    restart: always
+    # 컨테이너가 실행될 플랫폼을 지정
+    platform: linux/x86_64
+    # 컨테이너 내에서 사용할 환경 변수를 설정
+    environment:
+      # MySQL 데이터베이스의 이름을 db로 설정
+      MYSQL_DATABASE: 'db'
+      # MySQL에서 사용될 사용자 이름을 설정
+      MYSQL_USER: 'user'
+      # MySQL에서 사용될 사용자의 비빌번호를 설정
+      MYSQL_PASSWORD: '1234'
+      # MySQL 루트 사용자의 비밀번호를 설정
+      MYSQL_ROOT_PASSWORD: '1234'
+    # 호스트와 컨테이너 간의 포트 매핑을 정의한다 -> 호스트의 3306 포트와 컨테이너의 3306 포트를 연결
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    ports:
+      - '3306:3306'
+    # 컨테이너 이름을 정의
+    container_name: master-db
+    # 데이터를 영속적으로 저장할 볼륨을 정의 -> 볼륨은 컨테이너가 시작될 때 생성되고 컨테이너가 종료되어도 데이터가 유지된다.
+    volumes:
+      - my-db-master:/var/lib/mysql
+      - my-db-master:/var/lib/mysql-files
+    # 서비스가 연결될 네트워크를 지정
+    networks:
+      - net-mysql
+  
+  db-slave-1:
+    build: 
+      context: ./
+      dockerfile: slave1/Dockerfile
+    restart: always
+    platform: linux/x86_64
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: '1234'
+      MYSQL_ROOT_PASSWORD: '1234'
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    ports:
+      - '3307:3306'
+    container_name: slave-db-1
+    # Where our data will be persisted
+    volumes:
+      - my-db-slave-1:/var/lib/mysql
+      - my-db-slave-1:/var/lib/mysql-files
+    networks:
+      - net-mysql
+
+    
+  db-slave-2:
+    build: 
+      context: ./
+      dockerfile: slave2/Dockerfile
+    restart: always
+    platform: linux/x86_64
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: '1234'
+      MYSQL_ROOT_PASSWORD: '1234'
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    ports:
+      - '3308:3306'
+    container_name: slave-db-2
+    # Where our data will be persisted
+    volumes:
+      - my-db-slave-2:/var/lib/mysql
+      - my-db-slave-2:/var/lib/mysql-files
+    networks:
+      - net-mysql
+
+  db-slave-3:
+    build: 
+      context: ./
+      dockerfile: slave3/Dockerfile
+    restart: always
+    platform: linux/x86_64
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: '1234'
+      MYSQL_ROOT_PASSWORD: '1234'
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    ports:
+      - '3309:3306'
+    container_name: slave-db-3
+    # Where our data will be persisted
+    volumes:
+      - my-db-slave-3:/var/lib/mysql
+      - my-db-slave-3:/var/lib/mysql-files
+    networks:
+      - net-mysql
+  
+# 컨테이너에서 사용할 볼륨의 이름을 정의한다.
+volumes:
+  my-db-master:
+  my-db-slave-1: 
+  my-db-slave-2:
+  my-db-slave-3:
+
+# net-mysql 이라는 이름의 네트워크를 정의한다.
+networks: 
+  net-mysql:
+    # 이 네트워크는 Docker 컨테이너들 사이의 통신을 가능하게 하는 bridge 네트워크임을 정의
+    driver: bridge

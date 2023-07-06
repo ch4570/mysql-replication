@@ -41,7 +41,7 @@ public class DataSourceConfiguration {
         dataSourceMap.put("master", masterSource);
         properties.getReplicationSources().forEach((key, value) ->
                     dataSourceMap.put(value.getName(), createDataSource(
-                       value.getJdbcUrl(), value.getUsername(), value.getPassword(), value.getDriverClassName()
+                       value.getUsername(), value.getPassword(), value.getJdbcUrl(), value.getDriverClassName()
                     ))
                 );
 
